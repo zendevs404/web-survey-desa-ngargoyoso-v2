@@ -92,7 +92,7 @@ export default function Footer() {
           </div>
 
           <div className="mt-12 flex flex-col-reverse items-center gap-4 border-t border-white/10 pt-6 sm:flex-row sm:justify-between">
-            <p className="text-center text-xs text-white/60">
+            <p className="text-center text-xs text-white/60 sm:text-left">
               &copy; {new Date().getFullYear()} Desa Ngargoyoso, Karanganyar. Seluruh hak cipta dilindungi.
               <span className="mx-1.5 text-white/30">&bull;</span>
               Made by ZenDevs with <span aria-label="love" role="img">&hearts;</span>
