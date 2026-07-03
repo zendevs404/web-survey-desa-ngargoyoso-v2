@@ -1,0 +1,179 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --accent-1: 31, 77, 61;   /* forest fallback, overwritten by JS color extraction */
+  --accent-2: 227, 168, 87; /* turmeric fallback */
+  --accent-3: 184, 92, 50;  /* clay fallback */
+  --scroll-padding: 84px;
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+html {
+  scroll-padding-top: var(--scroll-padding);
+}
+
+body {
+  @apply bg-paper text-ink font-body antialiased transition-colors duration-500;
+}
+
+.dark body {
+  @apply bg-nightforest-bg text-nightforest-text;
+}
+
+/* ---------- Glass / Liquid Glass ---------- */
+.glass {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.dark .glass {
+  background: rgba(21, 40, 32, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+}
+
+.dark .glass-strong {
+  background: rgba(21, 40, 32, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.liquid-glass {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.liquid-glass::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  z-index: -1;
+  background: radial-gradient(
+      circle at 20% 20%,
+      rgba(var(--accent-2), 0.25),
+      transparent 55%
+    ),
+    radial-gradient(circle at 80% 70%, rgba(var(--accent-1), 0.22), transparent 55%);
+  filter: blur(40px);
+  opacity: 0.7;
+}
+
+/* ---------- Cards ---------- */
+.card-modern {
+  @apply rounded-3xl border border-black/5 dark:border-white/10 shadow-soft transition-all duration-500;
+}
+
+.card-hover-lift {
+  @apply transition-transform duration-300 ease-out;
+}
+
+.card-hover-lift:hover {
+  transform: translateY(-6px);
+}
+
+/* ---------- Gradient accent text ---------- */
+.gradient-accent-text {
+  background: linear-gradient(
+    100deg,
+    rgb(var(--accent-1)) 0%,
+    rgb(var(--accent-2)) 50%,
+    rgb(var(--accent-3)) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------- Scroll reveal ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- Focus states (accessibility) ---------- */
+:focus-visible {
+  outline: 2px solid rgb(var(--accent-2));
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--accent-1), 0.35);
+  border-radius: 999px;
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Contour texture overlay (village terrace motif) ---------- */
+.terrace-texture {
+  background-image: url("/patterns/contour.svg");
+  background-repeat: repeat-x;
+  background-size: 1400px auto;
+  background-position: bottom;
+}
+
+/* ---------- Rating card ---------- */
+.rating-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.rating-option {
+  cursor: pointer;
+}
+
+/* ---------- Confetti piece ---------- */
+.confetti-piece {
+  position: absolute;
+  top: -10%;
+  border-radius: 2px;
+  animation: confettiFall 2.6s ease-in forwards;
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(540deg);
+    opacity: 0;
+  }
+}
