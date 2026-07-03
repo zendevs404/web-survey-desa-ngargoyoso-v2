@@ -114,16 +114,17 @@ export function extractAccentColors(image: HTMLImageElement): {
     }
 
     let best: { count: number; r: number; g: number; b: number } | null = null;
-    buckets.forEach((bucket) => {
+    for (const bucket of buckets.values()) {
       if (!best || bucket.count > best.count) best = bucket;
-    });
+    }
 
     if (!best) return fallback;
 
+    const bestBucket = best;
     const dominant: RGB = {
-      r: Math.round(best.r / best.count),
-      g: Math.round(best.g / best.count),
-      b: Math.round(best.b / best.count)
+      r: Math.round(bestBucket.r / bestBucket.count),
+      g: Math.round(bestBucket.g / bestBucket.count),
+      b: Math.round(bestBucket.b / bestBucket.count)
     };
 
     const { h, s } = rgbToHsl(dominant);
