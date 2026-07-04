@@ -53,7 +53,7 @@ export default function Hero() {
           className="mt-6 animate-slideUp font-display text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl"
           style={{ animationDelay: "0.1s", opacity: 0 }}
         >
-          Belajar Tata Kelola Desa Wisata Desa Ngargoyoso, Karanganyar dari Pengalaman Nyata
+          Membangun Desa Wisata Berkelanjutan
         </h1>
 
         <p
