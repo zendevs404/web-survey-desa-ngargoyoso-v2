@@ -73,6 +73,38 @@ export function generateAIInsight(stats: DashboardStats): AIInsight {
     `Total ${stats.jumlahDesa} desa dan ${stats.jumlahKarangTaruna} Karang Taruna telah terlibat dalam pengisian kuesioner.`
   );
 
+  if (stats.karangTarunaPalingAktif) {
+    const jumlahTeraktif = stats.distribusiKarangTaruna[0]?.jumlah ?? 0;
+    temuanUtama.push(
+      `Karang Taruna paling aktif adalah ${stats.karangTarunaPalingAktif} dengan ${jumlahTeraktif} responden.`
+    );
+  }
+
+  if (stats.distribusiKarangTaruna.length > 0) {
+    const daftarJumlah = stats.distribusiKarangTaruna
+      .map((kt) => `${kt.nama} (${kt.jumlah} responden)`)
+      .join(", ");
+    temuanUtama.push(`Sebaran jumlah responden per Karang Taruna: ${daftarJumlah}.`);
+  }
+
+  if (stats.jumlahKarangTaruna > 0) {
+    temuanUtama.push(
+      `Rata-rata setiap Karang Taruna diwakili oleh sekitar ${stats.rataRespondenPerKarangTaruna.toFixed(
+        1
+      )} responden, menggambarkan tingkat partisipasi Karang Taruna secara keseluruhan.`
+    );
+  }
+
+  if (stats.distribusiKarangTaruna.length > 1) {
+    const teraktif = stats.distribusiKarangTaruna[0];
+    const tidakAktif = stats.distribusiKarangTaruna[stats.distribusiKarangTaruna.length - 1];
+    if (teraktif && tidakAktif && teraktif.nama !== tidakAktif.nama) {
+      temuanUtama.push(
+        `Dibandingkan dengan ${tidakAktif.nama} (${tidakAktif.jumlah} responden), partisipasi ${teraktif.nama} tercatat lebih tinggi (${teraktif.jumlah} responden), menunjukkan adanya kesenjangan partisipasi antar Karang Taruna.`
+      );
+    }
+  }
+
   const rekomendasi: string[] = [];
   if (terendah) {
     const spesifik = REKOMENDASI_PER_PERTANYAAN[terendah.id];
@@ -85,6 +117,16 @@ export function generateAIInsight(stats: DashboardStats): AIInsight {
     rekomendasi.push(
       "Evaluasi kembali metode penyampaian materi karena persentase kepuasan peserta masih di bawah target."
     );
+  }
+
+  if (stats.distribusiKarangTaruna.length > 1) {
+    const teraktif = stats.distribusiKarangTaruna[0];
+    const tidakAktif = stats.distribusiKarangTaruna[stats.distribusiKarangTaruna.length - 1];
+    if (teraktif && tidakAktif && teraktif.jumlah > tidakAktif.jumlah * 2) {
+      rekomendasi.push(
+        `Lakukan pendampingan tambahan bagi ${tidakAktif.nama} agar tingkat partisipasinya dapat menyusul Karang Taruna lain seperti ${teraktif.nama}.`
+      );
+    }
   }
 
   return { ringkasanUmum, temuanUtama, rekomendasi };

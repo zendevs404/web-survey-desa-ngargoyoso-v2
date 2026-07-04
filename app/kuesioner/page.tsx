@@ -7,14 +7,15 @@ import KuesionerStep from "@/components/form/KuesionerStep";
 import SuccessState from "@/components/form/SuccessState";
 import FloatingShapes from "@/components/FloatingShapes";
 import { submitSurvey } from "@/lib/submitSurvey";
+import { OPSI_KARANG_TARUNA_LAINNYA } from "@/types";
 import type { DataDiri, JawabanKuesioner, SurveyPayload } from "@/types";
 
 const INITIAL_DATA_DIRI: DataDiri = {
   nama: "",
   usia: "",
-  asalMode: "desa",
   asalDesa: "",
-  asalKarangTaruna: "",
+  karangTaruna: "",
+  karangTarunaLainnya: "",
   jenisKelamin: ""
 };
 
@@ -49,11 +50,16 @@ export default function KuesionerPage() {
     } else if (Number(dataDiri.usia) <= 0) {
       errors.usia = "Usia tidak valid.";
     }
-    if (dataDiri.asalMode === "desa" && !dataDiri.asalDesa) {
+    if (!dataDiri.asalDesa) {
       errors.asalDesa = "Silakan pilih desa asal Anda.";
     }
-    if (dataDiri.asalMode === "karang_taruna" && !dataDiri.asalKarangTaruna.trim()) {
-      errors.asalKarangTaruna = "Nama Karang Taruna wajib diisi.";
+    if (!dataDiri.karangTaruna) {
+      errors.karangTaruna = "Silakan pilih Karang Taruna Anda.";
+    } else if (
+      dataDiri.karangTaruna === OPSI_KARANG_TARUNA_LAINNYA &&
+      !dataDiri.karangTarunaLainnya.trim()
+    ) {
+      errors.karangTarunaLainnya = "Nama Karang Taruna wajib diisi.";
     }
     if (!dataDiri.jenisKelamin) errors.jenisKelamin = "Silakan pilih jenis kelamin.";
 
@@ -88,7 +94,11 @@ export default function KuesionerPage() {
       timestamp: new Date().toISOString(),
       nama: dataDiri.nama.trim(),
       usia: dataDiri.usia,
-      asal: dataDiri.asalMode === "desa" ? dataDiri.asalDesa : dataDiri.asalKarangTaruna.trim(),
+      asal: dataDiri.asalDesa,
+      karang_taruna:
+        dataDiri.karangTaruna === OPSI_KARANG_TARUNA_LAINNYA
+          ? dataDiri.karangTarunaLainnya.trim()
+          : dataDiri.karangTaruna,
       jenis_kelamin: dataDiri.jenisKelamin,
       q1: jawaban.q1 as number,
       q2: jawaban.q2 as number,

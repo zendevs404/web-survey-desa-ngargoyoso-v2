@@ -1,13 +1,11 @@
-export type AsalMode = "desa" | "karang_taruna";
-
 export type JenisKelamin = "Laki-laki" | "Perempuan" | "";
 
 export interface DataDiri {
   nama: string;
   usia: string;
-  asalMode: AsalMode;
   asalDesa: string;
-  asalKarangTaruna: string;
+  karangTaruna: string;
+  karangTarunaLainnya: string;
   jenisKelamin: JenisKelamin;
 }
 
@@ -27,6 +25,7 @@ export interface SurveyPayload {
   nama: string;
   usia: string;
   asal: string;
+  karang_taruna: string;
   jenis_kelamin: string;
   q1: number;
   q2: number;
@@ -48,6 +47,15 @@ export const DAFTAR_DESA = [
   "Jatirejo"
 ] as const;
 
+/** Opsi "Lainnya" pada pilihan Karang Taruna. */
+export const OPSI_KARANG_TARUNA_LAINNYA = "Lainnya";
+
+/** Daftar Karang Taruna per desa, ditambah opsi "Lainnya" di akhir. */
+export const DAFTAR_KARANG_TARUNA = [
+  ...DAFTAR_DESA.map((desa) => `Karang Taruna ${desa}`),
+  OPSI_KARANG_TARUNA_LAINNYA
+] as const;
+
 /* ========================================================================
  * BATCH 2 — Dashboard Analytics, AI Overview & Chatbot
  * Tipe tambahan di bawah ini murni menambah (tidak mengubah) tipe Batch 1
@@ -60,6 +68,7 @@ export interface SurveyRow {
   nama: string;
   usia: string | number;
   asal: string;
+  karang_taruna: string;
   jenis_kelamin: string;
   q1: number;
   q2: number;
@@ -118,6 +127,9 @@ export interface DashboardStats {
   trenPengisian: HitungTren[];
   kataKunciSaran: KataFrekuensi[];
   desaPalingAktif: string | null;
+  karangTarunaPalingAktif: string | null;
+  /** Rata-rata jumlah responden per Karang Taruna yang terlibat. */
+  rataRespondenPerKarangTaruna: number;
   kelompokUsiaPalingAktif: string | null;
 }
 

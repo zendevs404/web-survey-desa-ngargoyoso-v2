@@ -1,6 +1,7 @@
 "use client";
 
-import { DAFTAR_DESA, type DataDiri } from "@/types";
+import { DAFTAR_DESA, DAFTAR_KARANG_TARUNA, OPSI_KARANG_TARUNA_LAINNYA, type DataDiri } from "@/types";
+import SearchableSelect from "./SearchableSelect";
 
 interface DataDiriStepProps {
   data: DataDiri;
@@ -11,6 +12,7 @@ interface DataDiriStepProps {
 
 export default function DataDiriStep({ data, onChange, onNext, errors }: DataDiriStepProps) {
   const update = (patch: Partial<DataDiri>) => onChange({ ...data, ...patch });
+  const isLainnya = data.karangTaruna === OPSI_KARANG_TARUNA_LAINNYA;
 
   return (
     <div className="card-modern glass-strong p-6 sm:p-9">
@@ -58,66 +60,73 @@ export default function DataDiriStep({ data, onChange, onNext, errors }: DataDir
         </div>
 
         <div>
-          <span className="mb-2 block text-sm font-medium">
-            Asal Desa / Karang Taruna <span className="text-clay">*</span>
-          </span>
-          <div className="inline-flex rounded-full border border-black/10 dark:border-white/15 bg-white/50 dark:bg-white/5 p-1">
-            {(
-              [
-                { key: "desa", label: "Desa" },
-                { key: "karang_taruna", label: "Karang Taruna" }
-              ] as const
-            ).map((opt) => (
-              <button
-                key={opt.key}
-                type="button"
-                onClick={() => update({ asalMode: opt.key })}
-                className={`rounded-full px-5 py-2 text-xs font-semibold transition-all duration-300 sm:text-sm ${
-                  data.asalMode === opt.key
-                    ? "bg-forest-600 text-white shadow-soft"
-                    : "text-ink-soft dark:text-nightforest-text/70"
-                }`}
-              >
-                {opt.label}
-              </button>
+          <label htmlFor="asalDesa" className="mb-1.5 block text-sm font-medium">
+            Asal Desa <span className="text-clay">*</span>
+          </label>
+          <select
+            id="asalDesa"
+            value={data.asalDesa}
+            onChange={(e) => update({ asalDesa: e.target.value })}
+            className={`w-full rounded-xl border bg-white/70 dark:bg-white/5 px-4 py-3 text-sm text-ink outline-none transition-colors duration-200 focus:border-forest-400 dark:text-nightforest-text ${
+              errors.asalDesa ? "border-clay" : "border-black/10 dark:border-white/15"
+            }`}
+          >
+            <option value="" className="text-ink">
+              Pilih desa Anda
+            </option>
+            {DAFTAR_DESA.map((desa) => (
+              <option key={desa} value={desa} className="text-ink">
+                {desa}
+              </option>
             ))}
-          </div>
+          </select>
+          {errors.asalDesa && (
+            <p className="mt-1.5 text-xs font-medium text-clay">{errors.asalDesa}</p>
+          )}
+        </div>
 
-          <div className="mt-3">
-            {data.asalMode === "desa" ? (
-              <select
-                value={data.asalDesa}
-                onChange={(e) => update({ asalDesa: e.target.value })}
-                className={`w-full rounded-xl border bg-white/70 dark:bg-white/5 px-4 py-3 text-sm text-ink outline-none transition-colors duration-200 focus:border-forest-400 dark:text-nightforest-text ${
-                  errors.asalDesa ? "border-clay" : "border-black/10 dark:border-white/15"
-                }`}
-              >
-                <option value="" className="text-ink">
-                  Pilih desa Anda
-                </option>
-                {DAFTAR_DESA.map((desa) => (
-                  <option key={desa} value={desa} className="text-ink">
-                    {desa}
-                  </option>
-                ))}
-              </select>
-            ) : (
+        <div>
+          <label htmlFor="karangTaruna" className="mb-1.5 block text-sm font-medium">
+            Karang Taruna <span className="text-clay">*</span>
+          </label>
+          <SearchableSelect
+            id="karangTaruna"
+            value={data.karangTaruna}
+            onChange={(value) =>
+              update({
+                karangTaruna: value,
+                karangTarunaLainnya: value === OPSI_KARANG_TARUNA_LAINNYA ? data.karangTarunaLainnya : ""
+              })
+            }
+            options={DAFTAR_KARANG_TARUNA}
+            placeholder="Pilih Karang Taruna Anda"
+            searchPlaceholder="Cari Karang Taruna..."
+            hasError={!!errors.karangTaruna}
+          />
+          {errors.karangTaruna && (
+            <p className="mt-1.5 text-xs font-medium text-clay">{errors.karangTaruna}</p>
+          )}
+
+          {isLainnya && (
+            <div className="mt-3">
+              <label htmlFor="karangTarunaLainnya" className="mb-1.5 block text-sm font-medium">
+                Nama Karang Taruna Lainnya <span className="text-clay">*</span>
+              </label>
               <input
+                id="karangTarunaLainnya"
                 type="text"
-                value={data.asalKarangTaruna}
-                onChange={(e) => update({ asalKarangTaruna: e.target.value })}
+                value={data.karangTarunaLainnya}
+                onChange={(e) => update({ karangTarunaLainnya: e.target.value })}
                 placeholder="Tuliskan nama Karang Taruna Anda"
                 className={`w-full rounded-xl border bg-white/70 dark:bg-white/5 px-4 py-3 text-sm outline-none transition-colors duration-200 focus:border-forest-400 ${
-                  errors.asalKarangTaruna ? "border-clay" : "border-black/10 dark:border-white/15"
+                  errors.karangTarunaLainnya ? "border-clay" : "border-black/10 dark:border-white/15"
                 }`}
               />
-            )}
-            {(errors.asalDesa || errors.asalKarangTaruna) && (
-              <p className="mt-1.5 text-xs font-medium text-clay">
-                {errors.asalDesa || errors.asalKarangTaruna}
-              </p>
-            )}
-          </div>
+              {errors.karangTarunaLainnya && (
+                <p className="mt-1.5 text-xs font-medium text-clay">{errors.karangTarunaLainnya}</p>
+              )}
+            </div>
+          )}
         </div>
 
         <div>

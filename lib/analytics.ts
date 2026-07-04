@@ -1,4 +1,4 @@
-import { DAFTAR_DESA, DAFTAR_PERTANYAAN } from "@/types";
+import { DAFTAR_PERTANYAAN } from "@/types";
 import type {
   DashboardStats,
   HitungAsal,
@@ -6,8 +6,6 @@ import type {
   KataFrekuensi,
   SurveyRow
 } from "@/types";
-
-const DESA_SET = new Set<string>(DAFTAR_DESA as readonly string[]);
 
 const QUESTION_IDS: (keyof JawabanKuesioner)[] = ["q1", "q2", "q3", "q4", "q5", "q6", "q7"];
 
@@ -78,11 +76,12 @@ export function computeDashboardStats(rows: SurveyRow[]): DashboardStats {
   for (const row of rows) {
     const asal = (row.asal ?? "").toString().trim();
     if (asal) {
-      if (DESA_SET.has(asal)) {
-        desaMap.set(asal, (desaMap.get(asal) ?? 0) + 1);
-      } else {
-        karangTarunaMap.set(asal, (karangTarunaMap.get(asal) ?? 0) + 1);
-      }
+      desaMap.set(asal, (desaMap.get(asal) ?? 0) + 1);
+    }
+
+    const karangTaruna = (row.karang_taruna ?? "").toString().trim();
+    if (karangTaruna) {
+      karangTarunaMap.set(karangTaruna, (karangTarunaMap.get(karangTaruna) ?? 0) + 1);
     }
 
     const gender = (row.jenis_kelamin ?? "").toString().trim() || "Tidak diisi";
@@ -168,6 +167,11 @@ export function computeDashboardStats(rows: SurveyRow[]): DashboardStats {
     trenPengisian,
     kataKunciSaran,
     desaPalingAktif: distribusiDesa[0]?.nama ?? null,
+    karangTarunaPalingAktif: distribusiKarangTaruna[0]?.nama ?? null,
+    rataRespondenPerKarangTaruna:
+      distribusiKarangTaruna.length > 0
+        ? round1(totalResponden / distribusiKarangTaruna.length)
+        : 0,
     kelompokUsiaPalingAktif:
       distribusiUsia.slice().sort((a, b) => b.jumlah - a.jumlah)[0]?.jumlah
         ? distribusiUsia.slice().sort((a, b) => b.jumlah - a.jumlah)[0].kelompok
@@ -183,10 +187,12 @@ export function computeDashboardStats(rows: SurveyRow[]): DashboardStats {
 export function generateDemoRows(): SurveyRow[] {
   const desaSample = ["Ngargoyoso", "Kemuning", "Berjo", "Segorogunung", "Puntukrejo"];
   const ktSample = [
-    "KT Tunas Muda Ngargoyoso",
-    "KT Karya Bhakti Kemuning",
-    "KT Mekar Sari Berjo",
-    "KT Bina Remaja Puntukrejo"
+    "Karang Taruna Ngargoyoso",
+    "Karang Taruna Kemuning",
+    "Karang Taruna Berjo",
+    "Karang Taruna Segorogunung",
+    "Karang Taruna Puntukrejo",
+    "Sanggar Muda Mandiri (Lainnya)"
   ];
   const saranSample = [
     "Sesi praktik lapangan sebaiknya diperbanyak agar lebih memahami pengelolaan wisata",
@@ -208,10 +214,8 @@ export function generateDemoRows(): SurveyRow[] {
   };
 
   for (let i = 0; i < 64; i += 1) {
-    const pakaiDesa = rand() > 0.35;
-    const asal = pakaiDesa
-      ? desaSample[Math.floor(rand() * desaSample.length)]
-      : ktSample[Math.floor(rand() * ktSample.length)];
+    const asal = desaSample[Math.floor(rand() * desaSample.length)];
+    const karangTaruna = ktSample[Math.floor(rand() * ktSample.length)];
     const usia = 15 + Math.floor(rand() * 20);
     const gender = rand() > 0.48 ? "Laki-laki" : "Perempuan";
     const hariLalu = Math.floor(rand() * 21);
@@ -225,6 +229,7 @@ export function generateDemoRows(): SurveyRow[] {
       nama: `Peserta ${i + 1}`,
       usia,
       asal,
+      karang_taruna: karangTaruna,
       jenis_kelamin: gender,
       q1: jawab(),
       q2: jawab(),

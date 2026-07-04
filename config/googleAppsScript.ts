@@ -9,6 +9,14 @@
  *
  * Contoh .env.local:
  * NEXT_PUBLIC_GAS_URL=https://script.google.com/macros/s/XXXXXXXXXXXX/exec
+ *
+ * PENTING setelah penambahan identitas Karang Taruna:
+ * Tambahkan kolom baru "karang_taruna" pada header sheet "Responses",
+ * diletakkan di antara kolom "asal" dan "jenis_kelamin", agar urutannya
+ * sesuai dengan payload berikut:
+ * timestamp | nama | usia | asal | karang_taruna | jenis_kelamin | q1..q7 | saran
+ * doGet() membaca data berdasarkan nama kolom pada header, sehingga baris
+ * lama tanpa kolom "karang_taruna" tetap terbaca (nilainya kosong).
  */
 
 export const GOOGLE_APPS_SCRIPT_URL: string =
@@ -41,6 +49,7 @@ export const ANALYTICS_CONFIG = {
  *     data.nama,
  *     data.usia,
  *     data.asal,
+ *     data.karang_taruna,
  *     data.jenis_kelamin,
  *     data.q1,
  *     data.q2,
