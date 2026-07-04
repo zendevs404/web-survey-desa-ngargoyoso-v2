@@ -126,18 +126,20 @@ export default function ChatbotWidget() {
           </div>
 
           <div className="border-t border-black/5 px-4 py-3 dark:border-white/10">
-            <div className="mb-2.5 flex flex-wrap gap-1.5">
-              {QUICK_SUGGESTIONS.map((topic) => (
-                <button
-                  key={topic}
-                  type="button"
-                  onClick={() => respond(topic)}
-                  className="rounded-full border border-forest-200 bg-forest-50 px-3 py-1.5 text-[11px] font-medium text-forest-700 transition-colors duration-200 hover:bg-forest-100 dark:border-white/10 dark:bg-white/5 dark:text-turmeric-light dark:hover:bg-white/10"
-                >
-                  {topic}
-                </button>
-              ))}
-            </div>
+            {!messages.some((m) => m.role === "user") && (
+              <div className="mb-2.5 flex gap-1.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {QUICK_SUGGESTIONS.map((topic) => (
+                  <button
+                    key={topic}
+                    type="button"
+                    onClick={() => respond(topic)}
+                    className="shrink-0 whitespace-nowrap rounded-full border border-forest-200 bg-forest-50 px-3 py-1.5 text-[11px] font-medium text-forest-700 transition-colors duration-200 hover:bg-forest-100 dark:border-white/10 dark:bg-white/5 dark:text-turmeric-light dark:hover:bg-white/10"
+                  >
+                    {topic}
+                  </button>
+                ))}
+              </div>
+            )}
             <form onSubmit={handleSend} className="flex items-center gap-2">
               <label htmlFor="chatbot-input" className="sr-only">
                 Tulis pertanyaan Anda
