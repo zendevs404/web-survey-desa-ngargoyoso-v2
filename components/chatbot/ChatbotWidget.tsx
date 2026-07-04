@@ -79,8 +79,8 @@ export default function ChatbotWidget() {
                 </svg>
               </span>
               <div>
-                <p className="text-sm font-semibold">Asisten Ngargoyoso</p>
-                <p className="text-[11px] text-white/75">Biasanya membalas seketika</p>
+                <p className="text-sm font-semibold">Sipena</p>
+                <p className="text-[11px] text-white/75">Asisten Pintar Desa Ngargoyoso</p>
               </div>
             </div>
             <button
